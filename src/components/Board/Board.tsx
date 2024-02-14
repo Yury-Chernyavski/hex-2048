@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { fetchData } from "../../api";
-import { IHexCoord } from "../../models";
+import { fetchData } from "@/api";
+import { IHexCoord } from "@/models";
 
 export const Board: FC = () => {
 	const [hexCells, setHexCells] = useState<IHexCoord[]>([]);
