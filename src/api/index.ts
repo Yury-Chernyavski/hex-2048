@@ -1,9 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-// const apiUrl = import.meta.env.PROD ? import.meta.env.VITE_APP_API_URL_PROD
-//    : import.meta.env.VITE_APP_API_URL_LOCAL;
-
-const apiUrl = import.meta.env.VITE_APP_API_URL_PROD;
+const apiUrl = import.meta.env.PROD ? import.meta.env.VITE_APP_API_URL_PROD
+   : import.meta.env.VITE_APP_API_URL_LOCAL;
 
 interface IFetchData<T> {
    radius?: number,
