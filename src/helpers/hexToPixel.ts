@@ -9,8 +9,5 @@ export const hexToPixel = (hexData: IHexCoord[], width: number): TPixelCoord[] =
 		pixelArr.push({ x, y, value: c.value });
 	});
 
-	console.log(pixelArr);
-	
-	
 	return pixelArr;
 }
