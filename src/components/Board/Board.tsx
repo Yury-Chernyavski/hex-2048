@@ -1,10 +1,12 @@
+import { FC, useEffect, useState } from "react";
 import { fetchData } from "@/api";
 import { hexToPixel } from "@/helpers/hexToPixel";
 import { setGrid } from "@/helpers/setGrid";
 import { useCalcCellSize } from "@/hooks/useCalcCellSize";
 import { IHexCoord, TPixelCoord } from "@/models";
-import { FC, useEffect, useState } from "react";
 import { Cell } from "@/components";
+import { useThrottle } from "@/hooks/useThrottle";
+import { moveHandler } from "@/features/moveHandler";
 
 export const Board: FC = () => {
 	const radius: number = 2;
@@ -13,6 +15,11 @@ export const Board: FC = () => {
 	const [hexCells, setHexCells] = useState<IHexCoord[]>([]);
 	const [pixelCells, setPixelCells] = useState<TPixelCoord[]>([]);
 	const [updateBoard, setUpdateBoard] = useState<boolean>(false);
+	const fn = useThrottle<string>(moveHandler, 750);
+	
+	const handleKeyDown = (event: KeyboardEvent) => {
+		fn(event.key);
+	}
 
 	useEffect(() => {
 		setPixelGridCoords(hexToPixel(setGrid(radius), sizeCell.width));
@@ -40,13 +47,20 @@ export const Board: FC = () => {
 		setPixelCells([...hexToPixel(hexCells, sizeCell.width)]);
 	}, [hexCells, sizeCell]);
 
+	useEffect(() => {
+		window.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		}
+	}, [])
+
 	return (
 		<div>
 			{pixelCells.map((c, index) => (
 				<Cell
 					key={index}
 					style={{
-						position: "absolute",
 						width: `${sizeCell.width}px`,
 						height: `${sizeCell.height}px`,
 						top: `${c.x}px`,
@@ -59,7 +73,6 @@ export const Board: FC = () => {
 				<Cell
 					key={index}
 					style={{
-						position: "absolute",
 						width: `${sizeCell.width}px`,
 						height: `${sizeCell.height}px`,
 						top: `${c.x}px`,
