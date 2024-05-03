@@ -1,29 +1,29 @@
+import { IMoveHandler } from "@/models";
 import { useCallback, useEffect, useRef } from "react";
+import { callbackify } from "util";
 
-export const useThrottle = <T>(fn: (e: T) => void, duration: number) => {
+export const useThrottle = <T extends IMoveHandler>(fn: (args: T) => void, duration: number) => {
 	const timeout = useRef<number>(0);
 	const isThrottle = useRef<boolean>(false);
-	const lastValue = useRef<T | null>(null);
+	const lastValue = useRef<string>("");
 
-	const callback = useCallback((event: T) => {
-		lastValue.current = event;
+	const callback = useCallback((args: T) => {
+		lastValue.current = args.event;
 		if (isThrottle.current) {
 			return;
 		}
 
 		if (!isThrottle.current) {
-			lastValue.current && fn(lastValue.current);
+			fn(args);
 			isThrottle.current = true;
 
 			timeout.current = window.setTimeout(() => {
-				if (lastValue.current && lastValue.current !== event) {
-					fn(lastValue.current);
+				if (lastValue.current && lastValue.current !== args.event) {
+					fn({ event: lastValue.current, hexCoord: args.hexCoord } as T);
 				}
 				isThrottle.current = false;
 			}, duration);
 		}
-
-
 	}, [fn, duration])
 
 	useEffect(() => {

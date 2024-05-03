@@ -1,10 +1,25 @@
-export const moveHandler = (event: string) => {
+import { groupAxis } from "@/helpers/groupAxis";
+import { IHexCoord, IMoveHandler } from "@/models";
+
+export const moveHandler = ({event, hexCoord}: IMoveHandler) => {
+	let key: keyof IHexCoord;
+
 	switch (event) {
-		case "s":
-		case "w":
-		case "a":
-		case "d":
+		case "w": {
+			key = "x";
+			const sortByAxis = groupAxis<IHexCoord>(hexCoord, key);
+			console.log(sortByAxis);
+			break;
+		}
+		case "s": {
+			key = "x";
+			const sortByAxis = groupAxis<IHexCoord>(hexCoord, key);
+			console.log(sortByAxis);
+			break;
+		}
 		case "q":
+		case "d":
+		case "a":
 		case "e": {
 			console.log(event);
 		}

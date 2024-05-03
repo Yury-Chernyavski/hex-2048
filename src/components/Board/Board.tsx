@@ -15,10 +15,10 @@ export const Board: FC = () => {
 	const [hexCells, setHexCells] = useState<IHexCoord[]>([]);
 	const [pixelCells, setPixelCells] = useState<TPixelCoord[]>([]);
 	const [updateBoard, setUpdateBoard] = useState<boolean>(false);
-	const fn = useThrottle<string>(moveHandler, 750);
+	const moveThrottle = useThrottle(moveHandler, 750);
 	
 	const handleKeyDown = (event: KeyboardEvent) => {
-		fn(event.key);
+		moveThrottle({ event: event.key, hexCoord: hexCells });
 	}
 
 	useEffect(() => {
@@ -49,11 +49,11 @@ export const Board: FC = () => {
 
 	useEffect(() => {
 		window.addEventListener("keydown", handleKeyDown);
-
+		
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		}
-	}, [])
+	}, [hexCells])
 
 	return (
 		<div>
