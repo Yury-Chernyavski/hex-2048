@@ -3,4 +3,5 @@ export { type IFetch } from "./IFetch/IFetch";
 export { type ISize } from "./ISize/ISize";
 export { type TPixelCoord } from "./TPixelCoord/TPixelCoord";
 export { type ICell } from "./ICell/ICell";
-export { type IMoveHandler } from "./IMove/IMove";
+export { type ISortedData } from "./ISortedData/ISortedDate";
+export { type IMoveHandler, type IMoveLogic, type IWorkAxes } from "./IMove/IMove";

@@ -14,7 +14,7 @@ export const fetchData = async <T>({
 }: IFetchData<T>): Promise<AxiosResponse<T[]> | undefined> => {
    try {
       const data = await axios.post(`${apiUrl}/${radius}`, body);
-      return await data as AxiosResponse<T[]>;
+      return data as AxiosResponse<T[]>;
    } catch (e) {
       const errorMassage = (e as AxiosError).message;
       console.log(errorMassage);

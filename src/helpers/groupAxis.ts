@@ -1,8 +1,4 @@
-import { IHexCoord } from "@/models"
-
-type ISortedData<T extends IHexCoord> = {
-	[key in keyof T]: T[];
-}
+import { IHexCoord, ISortedData } from "@/models"
 
 export const groupAxis = <T extends IHexCoord>(arr: T[], key: keyof T): ISortedData<T> => {
 	return arr.reduce<ISortedData<T>>((map, elem) => {

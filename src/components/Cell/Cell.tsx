@@ -11,10 +11,10 @@ export const Cell: FC<ICell> = ({
 		<div
 			className="cell"
 			style={style}
-			// data-x={coordinates?.x}
-			// data-y={coordinates?.y}
-			// data-z={coordinates?.z}
-			// data-value={coordinates?.value}
+			data-x={coordinates?.x}
+			data-y={coordinates?.y}
+			data-z={coordinates?.z}
+			data-value={coordinates?.value}
 		>
 			{children}
 		</div>

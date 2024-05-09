@@ -1,27 +1,53 @@
 import { groupAxis } from "@/helpers/groupAxis";
-import { IHexCoord, IMoveHandler } from "@/models";
+import { IHexCoord, IMoveHandler, IWorkAxes } from "@/models";
+import { moveLogic } from "./moveLogic";
 
-export const moveHandler = ({event, hexCoord}: IMoveHandler) => {
-	let key: keyof IHexCoord;
+export const moveHandler = (moveData: IMoveHandler) => {
+	let mainAxis: keyof IHexCoord;
+	let workAxes: IWorkAxes;
 
-	switch (event) {
+	switch (moveData.event) {
 		case "w": {
-			key = "x";
-			const sortByAxis = groupAxis<IHexCoord>(hexCoord, key);
-			console.log(sortByAxis);
+			mainAxis = "x";
+			workAxes = { firstAxis: "y", secondAxis: "z" };
+			const sortByAxis = groupAxis<IHexCoord>(moveData.hexCells, mainAxis);
+			moveLogic({ ...moveData, workAxes, mainAxis, sortedHexArr: sortByAxis });
 			break;
 		}
 		case "s": {
-			key = "x";
-			const sortByAxis = groupAxis<IHexCoord>(hexCoord, key);
-			console.log(sortByAxis);
+			mainAxis = "x";
+			workAxes = { firstAxis: "z", secondAxis: "y" };
+			const sortByAxis = groupAxis<IHexCoord>(moveData.hexCells, mainAxis);
+			moveLogic({ ...moveData, workAxes, mainAxis, sortedHexArr: sortByAxis })
 			break;
 		}
-		case "q":
-		case "d":
-		case "a":
+		case "q": {
+			mainAxis = "y";
+			workAxes = { firstAxis: "x", secondAxis: "z" };
+			const sortByAxis = groupAxis<IHexCoord>(moveData.hexCells, mainAxis);
+			moveLogic({ ...moveData, workAxes, mainAxis, sortedHexArr: sortByAxis });
+			break;
+		}
+		case "d": {
+			mainAxis = "y";
+			workAxes = { firstAxis: "z", secondAxis: "x" };
+			const sortByAxis = groupAxis<IHexCoord>(moveData.hexCells, mainAxis);
+			moveLogic({ ...moveData, workAxes, mainAxis, sortedHexArr: sortByAxis });
+			break;
+		}
 		case "e": {
-			console.log(event);
+			mainAxis = "z";
+			workAxes = { firstAxis: "y", secondAxis: "x" };
+			const sortByAxis = groupAxis<IHexCoord>(moveData.hexCells, mainAxis);
+			moveLogic({ ...moveData, workAxes, mainAxis, sortedHexArr: sortByAxis });
+			break;
+		}
+		case "a": {
+			mainAxis = "z";
+			workAxes = { firstAxis: "x", secondAxis: "y" };
+			const sortByAxis = groupAxis<IHexCoord>(moveData.hexCells, mainAxis);
+			moveLogic({ ...moveData, workAxes, mainAxis, sortedHexArr: sortByAxis });
+			break;
 		}
 	}
 }
