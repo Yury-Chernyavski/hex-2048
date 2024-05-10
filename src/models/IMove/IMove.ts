@@ -1,10 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
-import { ISortedData } from "../ISortedData/ISortedDate";
+import { IGroupedData } from "../ISortedData/ISortedDate";
 import { IHexCoord } from "../IHexCoord/IHexCoord";
 
-export interface IWorkAxes {
-	firstAxis: "x" | "y" | "z",
-	secondAxis: "x" | "y" | "z",
+export interface IWorkAxes<T> {
+	mainAxis: keyof T,
+	firstAxis: keyof T,
+	secondAxis: keyof T,
 }
 export interface IMoveHandler {
 	radius: number,
@@ -16,9 +17,9 @@ export interface IMoveHandler {
 
 export interface IMoveLogic<T> {
 	radius: number,
-	mainAxis: keyof T,
-	workAxes: IWorkAxes,
-	sortedHexArr: ISortedData<T>,
+	// mainAxis: keyof T,
+	workAxes: IWorkAxes<T>,
+	groupedHexArr: IGroupedData<T>,
 	setHexCells: Dispatch<SetStateAction<T[]>>,
 	setUpdateBoard: Dispatch<SetStateAction<boolean>>
 }

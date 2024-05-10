@@ -1,8 +1,8 @@
 import { IHexCoord, IMoveLogic } from "@/models";
 
 export const moveLogic = ({
-	mainAxis,
-	sortedHexArr,
+	// mainAxis,
+	groupedHexArr,
 	radius,
 	workAxes,
 	setHexCells,
@@ -11,7 +11,7 @@ export const moveLogic = ({
 	const border = radius - 1;
 	const newCoords: IHexCoord[] = [];
 
-	for (const cells of Object.values(sortedHexArr)) {
+	for (const cells of Object.values(groupedHexArr)) {
 		// console.log(prevWorkAxes, cells);
 		// if (prevWorkAxes && workAxes.firstAxis !== prevWorkAxes?.firstAxis) {
 		// 	prevWorkAxes = workAxes;
@@ -37,16 +37,16 @@ export const moveLogic = ({
 					})
 				}
 			} else {
-				if (cell[mainAxis] >= 0) {
+				if (cell[workAxes.mainAxis] >= 0) {
 					newCoords.push({
 						...cell,
 						[workAxes.firstAxis]: -border,
-						[workAxes.secondAxis]: border - cell[mainAxis]
+						[workAxes.secondAxis]: border - cell[workAxes.mainAxis]
 					});
 				} else {
 					newCoords.push({
 						...cell,
-						[workAxes.firstAxis]: -border - cell[mainAxis],
+						[workAxes.firstAxis]: -border - cell[workAxes.mainAxis],
 						[workAxes.secondAxis]: border
 					})
 				}
