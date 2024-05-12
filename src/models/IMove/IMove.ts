@@ -1,25 +1,25 @@
 import { Dispatch, SetStateAction } from "react";
-import { IGroupedData } from "../ISortedData/ISortedDate";
 import { IHexCoord } from "../IHexCoord/IHexCoord";
+import { IGroupedData } from "../ISortedData/ISortedDate";
+import { IWorkAxes } from "../IWorkAxes/IWorkAxes";
 
-export interface IWorkAxes<T> {
-	mainAxis: keyof T,
-	firstAxis: keyof T,
-	secondAxis: keyof T,
-}
-export interface IMoveHandler {
+export interface IMoveLogic<T> extends IMoveHandler{
 	radius: number,
+	oldWorkAxes: IWorkAxes<IHexCoord> | null,
+	setHexCells: Dispatch<SetStateAction<T[]>>,
+	setOldWorkAxes: Dispatch<SetStateAction<IWorkAxes<IHexCoord> | null>>,
+}
+export interface IMoveHandler{
 	event: string,
 	hexCells: IHexCoord[],
-	setHexCells: Dispatch<SetStateAction<IHexCoord[]>>,
-	setUpdateBoard: Dispatch<SetStateAction<boolean>>
+	// radius: number,
+	// setHexCells: Dispatch<SetStateAction<IHexCoord[]>>,
 }
 
-export interface IMoveLogic<T> {
-	radius: number,
-	// mainAxis: keyof T,
-	workAxes: IWorkAxes<T>,
+export interface IMoveData<T> extends IMoveLogic<T> {
+	newWorkAxes: IWorkAxes<T>,
 	groupedHexArr: IGroupedData<T>,
-	setHexCells: Dispatch<SetStateAction<T[]>>,
-	setUpdateBoard: Dispatch<SetStateAction<boolean>>
 }
+// export type IMoveData<T> = IMoveHandler & IMoveLogic<T>;
+
+

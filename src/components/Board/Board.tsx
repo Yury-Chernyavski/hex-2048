@@ -1,12 +1,12 @@
-import { fetchData } from "@/api";
+import { getNewCells } from "@/api";
 import { Cell } from "@/components";
-import { colors } from "@/constants/colors";
+import { KEYS } from "@/constants/keys";
 import { moveHandler } from "@/features/moveHandler";
 import { hexToPixel } from "@/helpers/hexToPixel";
 import { setGrid } from "@/helpers/setGrid";
 import { useCalcCellSize } from "@/hooks/useCalcCellSize";
 import { useThrottle } from "@/hooks/useThrottle";
-import { IHexCoord, TPixelCoord } from "@/models";
+import { IHexCoord, IMoveLogic, IWorkAxes, TPixelCoord } from "@/models";
 import { FC, useEffect, useLayoutEffect, useState } from "react";
 
 export const Board: FC = () => {
@@ -15,17 +15,23 @@ export const Board: FC = () => {
 	const [pixelGridCoords, setPixelGridCoords] = useState<TPixelCoord[]>([]);
 	const [hexCells, setHexCells] = useState<IHexCoord[]>([]);
 	const [pixelCells, setPixelCells] = useState<TPixelCoord[]>([]);
-	const [updateBoard, setUpdateBoard] = useState<boolean>(false);
-	const moveThrottle = useThrottle(moveHandler, 750);
+	const [oldWorkAxes, setOldWorkAxes] = useState<IWorkAxes<IHexCoord> | null>(null);
+	const moveThrottle = useThrottle<IMoveLogic<IHexCoord>>(moveHandler, 750);
 
 	const handleKeyDown = (event: KeyboardEvent) => {
-		moveThrottle({
-			radius,
-			event: event.key,
-			hexCells,
-			setHexCells,
-			setUpdateBoard,
-		});
+		if (KEYS.includes(event.key)) {
+			moveThrottle({
+				radius,
+				event: event.key,
+				hexCells,
+				setHexCells,
+				oldWorkAxes,
+				setOldWorkAxes
+			});
+
+			// getNewCells(radius, hexCells)
+			// 	.then(newCells => newCells && setHexCells(prevData => ([...prevData, ...newCells])));
+		}
 	};
 
 	useLayoutEffect(() => {
@@ -33,22 +39,20 @@ export const Board: FC = () => {
 	}, [sizeCell]);
 
 	useEffect(() => {
-		const getData = async () => {
-			try {
-				const res = await fetchData<IHexCoord>({
-					radius,
-					body: hexCells,
-				});
+		getNewCells(radius, hexCells)
+			.then(newCells => newCells && setHexCells([...hexCells, ...newCells]),
+		);
+		// const getData = async () => {
+		// 		try {
+		// 		const data = await getNewCells(radius, hexCells);
+		// 		data && setHexCells([...hexCells, ...data]);
+		// 	} catch (e) {
+		// 		console.error(e);
+		// 	}
+		// };
 
-				res && setHexCells([...hexCells, ...res.data]);
-			} catch (e) {
-				console.error(e);
-			}
-		};
-
-		getData();
-		setUpdateBoard(false);
-	}, [updateBoard, radius]);
+		// getData();
+	}, [radius, oldWorkAxes]);
 
 	useLayoutEffect(() => {
 		setPixelCells([...hexToPixel(hexCells, sizeCell.width)]);
@@ -73,7 +77,8 @@ export const Board: FC = () => {
 						height: `${sizeCell.height}px`,
 						top: `${c.x}px`,
 						left: `${c.y}px`,
-					}} />
+					}}
+				/>
 			))}
 			{pixelGridCoords.map((c, index) => (
 				<Cell

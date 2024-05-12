@@ -1,7 +1,7 @@
 import { ICell } from "@/models";
 import { FC } from "react";
 import "./Cell.css";
-import { colors } from "@/constants/colors";
+import { COLORS } from "@/constants/colors";
 import HexBackground from "@/assets/hexagon-background.svg?react";
 
 export const Cell: FC<ICell> = ({
@@ -21,7 +21,7 @@ export const Cell: FC<ICell> = ({
 				<>
 					<HexBackground
 						style={{
-							fill: `${colors[coordinates?.value]}`,
+							fill: `${COLORS[coordinates?.value]}`,
 							height: "100%",
 							width: "100%",
 						}}

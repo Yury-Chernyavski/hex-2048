@@ -1,23 +1,22 @@
-import { IHexCoord, IMoveLogic } from "@/models";
+import { IHexCoord, IMoveData } from "@/models";
 
 export const moveLogic = ({
-	// mainAxis,
-	groupedHexArr,
 	radius,
-	workAxes,
+	newWorkAxes,
+	oldWorkAxes,
+	groupedHexArr,
 	setHexCells,
-	setUpdateBoard
-}: IMoveLogic<IHexCoord>) => {
+	setOldWorkAxes,
+}: IMoveData<IHexCoord>) => {
 	const border = radius - 1;
 	const newCoords: IHexCoord[] = [];
 
 	for (const cells of Object.values(groupedHexArr)) {
-		// console.log(prevWorkAxes, cells);
-		// if (prevWorkAxes && workAxes.firstAxis !== prevWorkAxes?.firstAxis) {
-		// 	prevWorkAxes = workAxes;
-		// 	cells.reverse();
-		// }
-		// console.log(prevWorkAxes, cells);
+		if (newWorkAxes.firstAxis !== oldWorkAxes?.firstAxis) {
+			cells.reverse();
+		}
+		setOldWorkAxes(newWorkAxes);
+
 		cells.forEach((cell, index, arr) => {
 			if (arr[index - 1]) {
 				const prevElem = newCoords[newCoords.length - 1];
@@ -25,34 +24,34 @@ export const moveLogic = ({
 					newCoords.pop();
 					newCoords.push({
 						...cell,
-						[workAxes.firstAxis]: prevElem[workAxes.firstAxis],
-						[workAxes.secondAxis]: prevElem[workAxes.secondAxis],
+						[newWorkAxes.firstAxis]: prevElem[newWorkAxes.firstAxis],
+						[newWorkAxes.secondAxis]: prevElem[newWorkAxes.secondAxis],
 						value: cell.value * 2
 					})
 				} else {
 					newCoords.push({
 						...cell,
-						[workAxes.firstAxis]: prevElem[workAxes.firstAxis] + 1,
-						[workAxes.secondAxis]: prevElem[workAxes.secondAxis] - 1,
+						[newWorkAxes.firstAxis]: prevElem[newWorkAxes.firstAxis] + 1,
+						[newWorkAxes.secondAxis]: prevElem[newWorkAxes.secondAxis] - 1,
 					})
 				}
 			} else {
-				if (cell[workAxes.mainAxis] >= 0) {
+				if (cell[newWorkAxes.mainAxis] >= 0) {
 					newCoords.push({
 						...cell,
-						[workAxes.firstAxis]: -border,
-						[workAxes.secondAxis]: border - cell[workAxes.mainAxis]
+						[newWorkAxes.firstAxis]: -border,
+						[newWorkAxes.secondAxis]: border - cell[newWorkAxes.mainAxis]
 					});
 				} else {
 					newCoords.push({
 						...cell,
-						[workAxes.firstAxis]: -border - cell[workAxes.mainAxis],
-						[workAxes.secondAxis]: border
+						[newWorkAxes.firstAxis]: -border - cell[newWorkAxes.mainAxis],
+						[newWorkAxes.secondAxis]: border
 					})
 				}
 			}
 		})
 	}
+	
 	setHexCells(newCoords);
-	setUpdateBoard(true);
 }

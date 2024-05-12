@@ -1,3 +1,4 @@
+import { IHexCoord } from "@/models";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 const apiUrl = import.meta.env.PROD ? import.meta.env.VITE_APP_API_URL_PROD
@@ -13,10 +14,26 @@ export const fetchData = async <T>({
    body
 }: IFetchData<T>): Promise<AxiosResponse<T[]> | undefined> => {
    try {
-      const data = await axios.post(`${apiUrl}/${radius}`, body);
-      return data as AxiosResponse<T[]>;
+      const res = await axios.post(`${apiUrl}/${radius}`, body);
+      if (res?.status !== 200) {
+         const errorMessage = `An error has occurred: ${res?.status}`;
+         throw new Error(errorMessage);
+      }
+      return res as AxiosResponse<T[]>;
    } catch (e) {
       const errorMassage = (e as AxiosError).message;
-      console.log(errorMassage);
+      console.error(errorMassage);
+   }
+};
+
+export const getNewCells = async (radius: number, hexCells: IHexCoord[]) => {
+   try {
+      const res = await fetchData<IHexCoord>({
+         radius,
+         body: hexCells,
+      });
+      return res?.data;
+   } catch (e) {
+      console.error(e);
    }
 };

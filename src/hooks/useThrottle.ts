@@ -17,13 +17,13 @@ export const useThrottle = <T extends IMoveHandler>(fn: (args: T) => void, durat
 			isThrottle.current = true;
 
 			timeout.current = window.setTimeout(() => {
-				if (lastValue.current && lastValue.current !== args.event) {
-					fn({ ...args, event: lastValue.current } as T);
+				if (lastValue.current !== args.event) {
+					fn({ ...args, event: lastValue.current });
 				}
 				isThrottle.current = false;
 			}, duration);
 		}
-	}, [fn, duration])
+	}, [fn, duration]);
 
 	useEffect(() => {
 		return () => {
