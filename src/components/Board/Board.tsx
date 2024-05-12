@@ -10,7 +10,7 @@ import { IHexCoord, IMoveLogic, IWorkAxes, TPixelCoord } from "@/models";
 import { FC, useEffect, useLayoutEffect, useState } from "react";
 
 export const Board: FC = () => {
-	const radius: number = 3;
+	const radius: number = 10;
 	const sizeCell = useCalcCellSize(radius);
 	const [pixelGridCoords, setPixelGridCoords] = useState<TPixelCoord[]>([]);
 	const [hexCells, setHexCells] = useState<IHexCoord[]>([]);
@@ -36,6 +36,8 @@ export const Board: FC = () => {
 
 	useLayoutEffect(() => {
 		setPixelGridCoords(hexToPixel(setGrid(radius), sizeCell.width));
+		console.log(pixelGridCoords);
+		
 	}, [sizeCell]);
 
 	useEffect(() => {

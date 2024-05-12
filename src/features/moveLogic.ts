@@ -12,9 +12,14 @@ export const moveLogic = ({
 	const newCoords: IHexCoord[] = [];
 
 	for (const cells of Object.values(groupedHexArr)) {
-		if (newWorkAxes.firstAxis !== oldWorkAxes?.firstAxis) {
-			cells.reverse();
-		}
+		// console.log(cells);
+		
+		cells.sort((a, b) => a[newWorkAxes.firstAxis] - b[newWorkAxes.firstAxis])
+		// console.log(cells);
+		
+		// if (newWorkAxes.firstAxis !== oldWorkAxes?.firstAxis) {
+		// 	cells.reverse();
+		// }
 		setOldWorkAxes(newWorkAxes);
 
 		cells.forEach((cell, index, arr) => {
