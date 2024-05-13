@@ -3,29 +3,21 @@ import { IHexCoord, IMoveData } from "@/models";
 export const moveLogic = ({
 	radius,
 	newWorkAxes,
-	oldWorkAxes,
 	groupedHexArr,
-	setHexCells,
-	setOldWorkAxes,
+	setNewArrCells,
 }: IMoveData<IHexCoord>) => {
 	const border = radius - 1;
 	const newCoords: IHexCoord[] = [];
 
 	for (const cells of Object.values(groupedHexArr)) {
-		// console.log(cells);
-		
 		cells.sort((a, b) => a[newWorkAxes.firstAxis] - b[newWorkAxes.firstAxis])
-		// console.log(cells);
-		
-		// if (newWorkAxes.firstAxis !== oldWorkAxes?.firstAxis) {
-		// 	cells.reverse();
-		// }
-		setOldWorkAxes(newWorkAxes);
 
 		cells.forEach((cell, index, arr) => {
 			if (arr[index - 1]) {
 				const prevElem = newCoords[newCoords.length - 1];
-				if (prevElem && cell.value === prevElem.value) {
+				// const oldPrevElem = cells[index - 1];
+				// FIXME: this solution doesn't work correctly
+				if (cell.value === prevElem.value && index < 2) {
 					newCoords.pop();
 					newCoords.push({
 						...cell,
@@ -58,5 +50,5 @@ export const moveLogic = ({
 		})
 	}
 	
-	setHexCells(newCoords);
+	setNewArrCells(newCoords);
 }

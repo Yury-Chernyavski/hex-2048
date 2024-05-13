@@ -6,16 +6,17 @@ import { hexToPixel } from "@/helpers/hexToPixel";
 import { setGrid } from "@/helpers/setGrid";
 import { useCalcCellSize } from "@/hooks/useCalcCellSize";
 import { useThrottle } from "@/hooks/useThrottle";
-import { IHexCoord, IMoveLogic, IWorkAxes, TPixelCoord } from "@/models";
+import { IHexCoord, IMoveLogic, TPixelCoord } from "@/models";
 import { FC, useEffect, useLayoutEffect, useState } from "react";
 
+
 export const Board: FC = () => {
-	const radius: number = 10;
+	const radius: number = 3;
 	const sizeCell = useCalcCellSize(radius);
 	const [pixelGridCoords, setPixelGridCoords] = useState<TPixelCoord[]>([]);
 	const [hexCells, setHexCells] = useState<IHexCoord[]>([]);
 	const [pixelCells, setPixelCells] = useState<TPixelCoord[]>([]);
-	const [oldWorkAxes, setOldWorkAxes] = useState<IWorkAxes<IHexCoord> | null>(null);
+	const [newArrCells, setNewArrCells] = useState<IHexCoord[]>([]);
 	const moveThrottle = useThrottle<IMoveLogic<IHexCoord>>(moveHandler, 750);
 
 	const handleKeyDown = (event: KeyboardEvent) => {
@@ -24,37 +25,31 @@ export const Board: FC = () => {
 				radius,
 				event: event.key,
 				hexCells,
-				setHexCells,
-				oldWorkAxes,
-				setOldWorkAxes
+				setNewArrCells,
 			});
-
-			// getNewCells(radius, hexCells)
-			// 	.then(newCells => newCells && setHexCells(prevData => ([...prevData, ...newCells])));
 		}
 	};
 
 	useLayoutEffect(() => {
 		setPixelGridCoords(hexToPixel(setGrid(radius), sizeCell.width));
-		console.log(pixelGridCoords);
-		
-	}, [sizeCell]);
+	}, [sizeCell.width]);
 
 	useEffect(() => {
-		getNewCells(radius, hexCells)
-			.then(newCells => newCells && setHexCells([...hexCells, ...newCells]),
-		);
-		// const getData = async () => {
-		// 		try {
-		// 		const data = await getNewCells(radius, hexCells);
-		// 		data && setHexCells([...hexCells, ...data]);
-		// 	} catch (e) {
-		// 		console.error(e);
-		// 	}
-		// };
+		// getNewCells(radius, newArrCells)
+		// 	.then(newCells => newCells && setHexCells([...newArrCells, ...newCells]),
+		// );
+		const getData = async () => {
+			try {
+				const data = await getNewCells(radius, newArrCells);
+				data && setHexCells([...newArrCells, ...data]);
+			} catch (e) {
+				console.error(e);
+			}
+		};
 
-		// getData();
-	}, [radius, oldWorkAxes]);
+		getData();
+		// setHexCells(prevState => ([...prevState, ...newArrCells]))
+	}, [radius, newArrCells]);
 
 	useLayoutEffect(() => {
 		setPixelCells([...hexToPixel(hexCells, sizeCell.width)]);
@@ -66,7 +61,7 @@ export const Board: FC = () => {
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [hexCells]);
+	});
 
 	return (
 		<div>
