@@ -48,7 +48,6 @@ export const Board: FC = () => {
 		};
 
 		getData();
-		// setHexCells(prevState => ([...prevState, ...newArrCells]))
 	}, [radius, newArrCells]);
 
 	useLayoutEffect(() => {
@@ -61,7 +60,7 @@ export const Board: FC = () => {
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	});
+	}, [hexCells]);
 
 	return (
 		<div>

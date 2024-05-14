@@ -10,15 +10,14 @@ export const moveLogic = ({
 	const newCoords: IHexCoord[] = [];
 
 	for (const cells of Object.values(groupedHexArr)) {
+		let count: number = 0;
 		cells.sort((a, b) => a[newWorkAxes.firstAxis] - b[newWorkAxes.firstAxis])
-
 		cells.forEach((cell, index, arr) => {
 			if (arr[index - 1]) {
 				const prevElem = newCoords[newCoords.length - 1];
-				// const oldPrevElem = cells[index - 1];
-				// FIXME: this solution doesn't work correctly
-				if (cell.value === prevElem.value && index < 2) {
+				if (cell.value === prevElem.value && count < 1) {
 					newCoords.pop();
+					count++;
 					newCoords.push({
 						...cell,
 						[newWorkAxes.firstAxis]: prevElem[newWorkAxes.firstAxis],
@@ -26,6 +25,7 @@ export const moveLogic = ({
 						value: cell.value * 2
 					})
 				} else {
+					count = 0;
 					newCoords.push({
 						...cell,
 						[newWorkAxes.firstAxis]: prevElem[newWorkAxes.firstAxis] + 1,
