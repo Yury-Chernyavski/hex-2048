@@ -9,29 +9,24 @@ export const moveHandler = (moveData: IMoveLogic<IHexCoord>) => {
 		case "w": {
 			newWorkAxes = { mainAxis: "x", firstAxis: "y", secondAxis: "z" };
 			const groupedByAxis = groupAxis<IHexCoord>(moveData.hexCells, newWorkAxes.mainAxis);
-			console.log(groupedByAxis);
-			
 			moveLogic({ ...moveData, newWorkAxes, groupedHexArr: groupedByAxis });
 			break;
 		}
 		case "s": {
 			newWorkAxes = { mainAxis: "x", firstAxis: "z", secondAxis: "y" };
 			const groupedByAxis = groupAxis<IHexCoord>(moveData.hexCells, newWorkAxes.mainAxis);
-			console.log(groupedByAxis);
 			moveLogic({ ...moveData, newWorkAxes, groupedHexArr: groupedByAxis });
 			break;
 		}
 		case "q": {
 			newWorkAxes = { mainAxis: "y", firstAxis: "x", secondAxis: "z" };
 			const groupedByAxis = groupAxis<IHexCoord>(moveData.hexCells, newWorkAxes.mainAxis);
-			console.log(groupedByAxis);
 			moveLogic({ ...moveData, newWorkAxes, groupedHexArr: groupedByAxis });
 			break;
 		}
 		case "d": {
 			newWorkAxes = { mainAxis: "y", firstAxis: "z", secondAxis: "x" };
 			const groupedByAxis = groupAxis<IHexCoord>(moveData.hexCells, newWorkAxes.mainAxis);
-			console.log(groupedByAxis);
 			moveLogic({ ...moveData, newWorkAxes, groupedHexArr: groupedByAxis });
 			break;
 		}

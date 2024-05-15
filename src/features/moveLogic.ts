@@ -10,6 +10,7 @@ export const moveLogic = ({
 	const newCoords: IHexCoord[] = [];
 
 	for (const cells of Object.values(groupedHexArr)) {
+		
 		let count: number = 0;
 		cells.sort((a, b) => a[newWorkAxes.firstAxis] - b[newWorkAxes.firstAxis])
 		cells.forEach((cell, index, arr) => {
