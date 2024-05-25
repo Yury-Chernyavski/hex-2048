@@ -1,14 +1,22 @@
-import { ICell } from "@/models";
-import { FC } from "react";
-import "./Cell.css";
-import { COLORS } from "@/constants/colors";
 import HexBackground from "@/assets/hexagon-background.svg?react";
+import { COLORS } from "@/constants/colors";
+import { ICell } from "@/models";
+import { FC, useLayoutEffect, useState } from "react";
+import "./Cell.css";
 
 export const Cell: FC<ICell> = ({
 	style,
-	// children,
 	coordinates,
 }): JSX.Element => {
+	const [scale, setScale] = useState<number>(1);
+
+	useLayoutEffect(() => {
+		setScale(1.3);
+
+		setTimeout(() => setScale(1), 100);
+	}, []);
+
+
 	return (
 		<div
 			className="cell"
@@ -24,6 +32,8 @@ export const Cell: FC<ICell> = ({
 							fill: `${COLORS[coordinates?.value]}`,
 							height: "100%",
 							width: "100%",
+							transform: `scale(${scale})`,
+							transition: "transform .2s"
 						}}
 					/>
 					<span>{coordinates.value}</span>

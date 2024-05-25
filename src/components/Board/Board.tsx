@@ -1,4 +1,4 @@
-import { getNewCells } from "@/api";
+import { fetchData } from "@/api";
 import { Cell } from "@/components";
 import { KEYS } from "@/constants/keys";
 import { moveHandler } from "@/features/moveHandler";
@@ -7,12 +7,11 @@ import { setGrid } from "@/helpers/setGrid";
 import { useCalcCellSize } from "@/hooks/useCalcCellSize";
 import { useThrottle } from "@/hooks/useThrottle";
 import { IHexCoord, IMoveLogic, TPixelCoord } from "@/models";
-import { FC, useEffect, useLayoutEffect, useState } from "react";
-
+import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export const Board: FC = () => {
-	const radius: number = 3;
-	const sizeCell = useCalcCellSize(radius);
+	const radius = useRef<number>(3);
+	const sizeCell = useCalcCellSize(radius.current);
 	const [pixelGridCoords, setPixelGridCoords] = useState<TPixelCoord[]>([]);
 	const [hexCells, setHexCells] = useState<IHexCoord[]>([]);
 	const [pixelCells, setPixelCells] = useState<TPixelCoord[]>([]);
@@ -22,7 +21,7 @@ export const Board: FC = () => {
 	const handleKeyDown = (event: KeyboardEvent) => {
 		if (KEYS.includes(event.key)) {
 			moveThrottle({
-				radius,
+				radius: radius.current,
 				event: event.key,
 				hexCells,
 				setNewArrCells,
@@ -31,23 +30,25 @@ export const Board: FC = () => {
 	};
 
 	useLayoutEffect(() => {
-		setPixelGridCoords(hexToPixel(setGrid(radius), sizeCell.width));
+		setPixelGridCoords(hexToPixel(setGrid(radius.current), sizeCell.width));
 	}, [sizeCell.width]);
 
 	useEffect(() => {
-		// getNewCells(radius, newArrCells)
-		// 	.then(newCells => newCells && setHexCells([...newArrCells, ...newCells]),
-		// );
-		const getData = async () => {
-			try {
-				const data = await getNewCells(radius, newArrCells);
-				data && setHexCells([...newArrCells, ...data]);
-			} catch (e) {
-				console.error(e);
-			}
-		};
-
-		getData();
+		const abortController = new AbortController();
+		const abortSignal = abortController.signal;
+		fetchData({ radius: radius.current, body: newArrCells, abortSignal })
+			.then(res => res?.data)
+			.then(data => {
+				setHexCells([...newArrCells]);
+				setTimeout(() => {
+					data && setHexCells(prev => [...prev, ...data]);
+				}, 100);
+			})
+			.catch(e => console.error(e));
+			
+		return () => {
+			abortController.abort();
+		}
 	}, [radius, newArrCells]);
 
 	useLayoutEffect(() => {
@@ -60,7 +61,7 @@ export const Board: FC = () => {
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [hexCells]);
+	});
 
 	return (
 		<div>
