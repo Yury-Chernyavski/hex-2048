@@ -1,13 +1,6 @@
-.cell {
+.gridCell {
 	position: absolute;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	background: url("@/assets/hexagon-border.png");
 	background-position: center;
 	background-size: 100%;
-}
-
-.cell span {
-	position: absolute;
 }

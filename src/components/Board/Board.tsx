@@ -1,5 +1,5 @@
 import { fetchData } from "@/api";
-import { Cell } from "@/components";
+import { Cell, GridCell } from "@/components";
 import { KEYS } from "@/constants/keys";
 import { moveHandler } from "@/features/moveHandler";
 import { hexToPixel } from "@/helpers/hexToPixel";
@@ -78,7 +78,7 @@ export const Board: FC = () => {
 				/>
 			))}
 			{pixelGridCoords.map((c, index) => (
-				<Cell
+				<GridCell
 					key={index}
 					style={{
 						width: `${sizeCell.width}px`,

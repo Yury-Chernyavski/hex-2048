@@ -1,0 +1,14 @@
+.cell {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-position: center;
+	background-size: 100%;
+	transition-property: top, left, transform;
+	transition-duration: .2s, .2s, .2s;
+}
+
+.cell span {
+	position: absolute;
+}

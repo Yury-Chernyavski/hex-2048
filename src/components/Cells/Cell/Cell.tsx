@@ -33,7 +33,6 @@ export const Cell: FC<ICell> = ({
 							height: "100%",
 							width: "100%",
 							transform: `scale(${scale})`,
-							transition: "transform .2s"
 						}}
 					/>
 					<span>{coordinates.value}</span>
